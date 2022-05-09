@@ -9,19 +9,16 @@ import javax.swing.*;
 
 
 public class BibliotekaMainFrame extends JFrame {
-
     private JDesktopPane desktop;
-
     private JToolBar toolbar;
-
     private JButton btnRegister;
-
     private JButton btnSearch;
 
     public BibliotekaMainFrame() {
         super("Biblioteka");
 
         desktop = new JDesktopPane();
+
         JMenuBar menuBar = new JMenuBar();
 
         JMenu menuFile = new JMenu("Skedar");
@@ -34,7 +31,6 @@ public class BibliotekaMainFrame extends JFrame {
         menuItem.setAccelerator(keyStrokeToRegister);
 
         menuFile.add(menuItem);
-
         menuItem = new JMenuItem();
         menuItem.setAction(new AuthorsAction("Autoret"));
         menuFile.add(menuItem);
@@ -72,12 +68,21 @@ public class BibliotekaMainFrame extends JFrame {
 
     private class AuthorsAction extends AbstractAction {
         public AuthorsAction(String title) {
-            super(title, UIHelper.authorsIcon);
+            super(title, UIHelper.addIcon);
 
         }
 
         @Override
-        public void actionPerformed(ActionEvent arg0) { // ketu vjen kodi qe hap frame-in e autorve
+        public void actionPerformed(ActionEvent arg0) {
+            AuthorsInternalFrame rFrame = new AuthorsInternalFrame("Menaxhimi i autoreve");
+            desktop.add(rFrame);
+            try {
+                rFrame.setSelected(true);
+                rFrame.setVisible(true);
+
+            } catch (java.beans.PropertyVetoException ex) {
+            }
+
         }
 
     }
@@ -89,19 +94,33 @@ public class BibliotekaMainFrame extends JFrame {
         }
 
         @Override
-        public void actionPerformed(ActionEvent arg0) { // ketu vjen kodi qe hap frame-in e librave
+        public void actionPerformed(ActionEvent arg0) {
+            BookInternalFrame rFrame = new BookInternalFrame("Menagjimi i librave");
+            desktop.add(rFrame);
+            try {
+                rFrame.setSelected(true);
+            } catch (java.beans.PropertyVetoException e) {
+            }
         }
-
     }
 
     private class CategoriesAction extends AbstractAction {
         public CategoriesAction(String title) {
-            super(title, UIHelper.repairIcon);
+            super(title, UIHelper.repairIcon); // Icon!!
 
         }
 
         @Override
-        public void actionPerformed(ActionEvent arg0) { // ketu vjen kodi qe hap frame-in e kategorive
+        public void actionPerformed(ActionEvent arg0) {
+            CategoryInternalFrame rFrame = new CategoryInternalFrame("Menaxhimi i kategorive");
+            desktop.add(rFrame);
+            try {
+                rFrame.setSelected(true);
+                rFrame.setVisible(true);
+
+            } catch (java.beans.PropertyVetoException ex) {
+            }
+
         }
 
     }
@@ -135,7 +154,6 @@ public class BibliotekaMainFrame extends JFrame {
 
     public void createToolBar() {
         toolbar = new JToolBar();
-
         btnRegister = new JButton();
         btnRegister.setAction(new BookAction(""));
         btnRegister.setToolTipText("Regjistro liber te ri");
@@ -147,5 +165,4 @@ public class BibliotekaMainFrame extends JFrame {
         toolbar.add(btnSearch);
 
     }
-
 }
