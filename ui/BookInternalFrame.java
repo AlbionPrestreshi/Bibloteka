@@ -21,6 +21,7 @@ import java.util.List;
 import javax.swing.*;
 
 
+
 public class BookInternalFrame extends BaseInternalFrame<Book> {
     private BookTableModel model;
     private CustomizedTable tblBooks;
@@ -96,8 +97,7 @@ public class BookInternalFrame extends BaseInternalFrame<Book> {
         JPanel pnlTable = new JPanel();
         pnlTable.setBorder(BorderFactory.createTitledBorder("Lista e librave"));
 
-        pnlTable.setLayout(new BorderLayout(5, 5));
-        String[] columns = {"ID", "Title", "ISBN", "Publish Date"};
+                pnlTable.setLayout(new BorderLayout(5, 5)); String[] columns = {"ID", "Title", "ISBN", "Publish Date"};
         model = new BookTableModel(columns, elements);
         tblBooks = new CustomizedTable(model);
         tblBooks.addMouseListener(new RowClickListener());

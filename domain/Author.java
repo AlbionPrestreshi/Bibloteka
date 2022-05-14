@@ -1,9 +1,18 @@
 package bibloteka.domain;
 
-public class Author {
-    private int id;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "authors")
+public class Author extends BaseEntity {
+
+    @DatabaseField
     private String name;
+
+    @DatabaseField
     private String lastName;
+
+    @DatabaseField
     private String country;
 
     public String getName() {
@@ -14,20 +23,12 @@ public class Author {
         this.name = name;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastname) {
-        this.lastName = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getCountry() {
@@ -51,6 +52,7 @@ public class Author {
 
         if (this == obj) return true;
         if (obj == null)
+
             return false;
         if (getClass() != obj.getClass())
 
@@ -65,6 +67,10 @@ public class Author {
 
     @Override
     public String toString() {
-        return "Author [id=" + id + ", name=" + name + ", lastName=" + lastName + ", country=" + country + "]";
+        return "Author [id=" + id + ", name=" + name + ", lastName=" +
+
+                lastName + ", country=" + country + "]";
+
     }
+
 }

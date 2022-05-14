@@ -1,11 +1,17 @@
 package bibloteka.ui;
 
+import bibloteka.dao.AuthorDao;
+import bibloteka.domain.Author;
+import bibloteka.ui.tablemodels.AuthorTableModel;
+import bibloteka.ui.tablemodels.CustomizedTable;
+import bibloteka.ui.utill.UIHelper;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +26,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
-import bibloteka.dao.AuthorDao;
-import bibloteka.domain.Author;
-import bibloteka.ui.tablemodels.AuthorTableModel;
-import bibloteka.ui.tablemodels.CustomizedTable;
-import bibloteka.ui.utill.UIHelper;
-
 
 public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements ActionListener {
 
@@ -39,12 +39,12 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
     private AuthorTableModel model;
 
     private List<Author> elements;
+
     private ArrayList<Author> filteredElements = new ArrayList<>();
 
-    public AuthorsInternalFrame(String title) {
-        super(title, UIHelper.authorsIcon, new AuthorDao());
+    public AuthorsInternalFrame(String title) throws SQLException {
+        super(title, UIHelper.authorsIcon, new AuthorDao(Author.class));
         new GetAuthors().execute();
-
     }
 
     private void filter(String filterText) {
@@ -84,7 +84,6 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
 
     }
 
-
     @Override
     public void actionPerformed(ActionEvent evt) {
         if (evt.getSource() == btnNewAuthor) {
@@ -105,20 +104,14 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
                 getParent().add(frm);
                 try {
                     frm.setSelected(true);
-
-
                     frm.addInternalFrameListener(new AuthorFrameListener());
                 } catch (java.beans.PropertyVetoException e) {
                 }
-
             }
         } else if (evt.getSource() == btnDeleteAuthor) {
-
             int selectedRow = table.getSelectedRow();
-
-
             if (selectedRow != -1) {
-                int confirm = UIHelper.confirm("A jeni te sigurt ??");
+                int confirm = UIHelper.confirm("A jeni te sigurt??");
                 if (confirm == JOptionPane.YES_OPTION) {
                     Author author = model.get(selectedRow);
                     try {
@@ -129,15 +122,19 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
                     }
 
                 }
+
             }
         } else if (evt.getSource() == btnSearch) {
+
         }
 
     }
 
     class AuthorFrameListener implements InternalFrameListener {
+
         @Override
         public void internalFrameActivated(InternalFrameEvent arg0) {
+
         }
 
         @Override
@@ -149,6 +146,7 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
             AuthorNewEditFrame frm = (AuthorNewEditFrame) evt.getInternalFrame();
             Author author = frm.getAuthor();
             if (author != null && author.getId() != 0) model.add(author);
+
         }
 
         @Override
@@ -204,9 +202,8 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
+            public void removeUpdate(DocumentEvent e) { // kur fshihet nje shkronje
 
-// kur fshihet nje shkronje
                 String filterText = txtSearch.getText();
                 if (filterText.equals("")) {
 
@@ -231,39 +228,28 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
             public void changedUpdate(DocumentEvent e) {
 
             }
+
         });
         pnlRightButtons.add(txtSearch);
 
-        btnSearch = new
-
-                JButton("");
+        btnSearch = new JButton("");
         btnSearch.setIcon(UIHelper.findIcon);
         pnlRightButtons.add(btnSearch);
 
         JPanel pnlTable = new JPanel();
-        pnlTable.setLayout(new
-
-                BorderLayout(0, 0));
+        pnlTable.setLayout(new BorderLayout(0, 0));
 
         String[] columns = {"ID", "Emri", "Mbiemri", "Shteti"};
-        model = new
+        model = new AuthorTableModel(columns, elements);
 
-                AuthorTableModel(columns, elements);
-
-        table = new
-
-                CustomizedTable(model);
-        table.setFont(new
-
-                Font("Tahoma", Font.PLAIN, 18));
+        table = new CustomizedTable(model);
+        table.setFont(new Font("Tahoma", Font.PLAIN, 18));
         table.setRowHeight(30);
         JScrollPane scrollPane = new JScrollPane(table);
         pnlTable.add(scrollPane, BorderLayout.CENTER);
         pnlContent.add(pnlTable, BorderLayout.CENTER);
 
-        getContentPane().
-
-                add(pnlContent, BorderLayout.CENTER);
+        getContentPane().add(pnlContent, BorderLayout.CENTER);
 
         updateFooterMessage("Loading data...");
 

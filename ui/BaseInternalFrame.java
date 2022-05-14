@@ -1,27 +1,39 @@
 package bibloteka.ui;
 
-import bibloteka.dao.Dao;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
+import bibloteka.dao.BibliotekaAbstractDao;
 
 
 public abstract class BaseInternalFrame<T> extends JInternalFrame {
 
-    protected Dao<T> baseDao;
+    protected
 
+    BibliotekaAbstractDao<T> baseDao;
     private JLabel lblFooterLabel = new JLabel(" ");
     protected Font titleFont = new Font("Arial", Font.BOLD, 20);
     protected Font normalFont = new Font("Arial", Font.BOLD, 18);
     protected Font footerFont = new Font("Arial", Font.BOLD, 15);
 
-    public BaseInternalFrame(String title, ImageIcon icon, Dao<T> baseDao) {
-
+    public BaseInternalFrame(String title, ImageIcon icon, BibliotekaAbstractDao<T> baseDao) {
         super(title, true, true, true, true);
         this.baseDao = baseDao;
         getContentPane().setLayout(new BorderLayout(0, 0));
-        doHeaderLayout(icon);// 1 doCustomLayout();// 2-impl. me vone doFooterLayout();// 3
+        doHeaderLayout(icon);// 1
+        doCustomLayout();// 2-impl. me vone
+        doFooterLayout();// 3
 
         pack();
         setVisible(true);
@@ -29,6 +41,7 @@ public abstract class BaseInternalFrame<T> extends JInternalFrame {
     }
 
     public void updateFooterMessage(String message) {
+
         lblFooterLabel.setText(message); // largon tekstin e labeles pas 3 sekondave
         Timer t = new Timer(3000, new ActionListener() {
 

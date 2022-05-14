@@ -2,36 +2,40 @@ package bibloteka.domain;
 
 import java.util.Date;
 
-public class Book {
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
-    private int id;
-    private int categoryId;
+@DatabaseTable(tableName = "books")
+public class Book extends BaseEntity {
+    @DatabaseField(foreign = true, columnName = "category_id", foreignColumnName = "id")
+
+    private Category category;
+    @DatabaseField
     private String title;
+    @DatabaseField
     private String photo;
+    @DatabaseField
     private String isbn;
+    @DatabaseField(columnName = "publish_date")
     private Date publishDate;
 
-    public int getId() {
-        return id;
+    public Category getCategory() {
+
+        return category;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setCategory(Category category) {
 
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+        this.category = category;
     }
 
     public String getTitle() {
+
         return title;
     }
 
     public void setTitle(String title) {
+
         this.title = title;
     }
 
@@ -63,7 +67,6 @@ public class Book {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + categoryId;
         result = prime * result + id;
         return result;
     }
@@ -72,20 +75,28 @@ public class Book {
     public boolean equals(Object obj) {
 
         if (this == obj) return true;
+        if (obj == null)
 
-        if (obj == null) return false;
+            return false;
+        if (getClass() != obj.getClass())
 
-
-        if (getClass() != obj.getClass()) return false;
+            return false;
         Book other = (Book) obj;
-        if (categoryId != other.categoryId) return false;
-        if (id != other.id) return false;
+        if (id != other.id)
+
+            return false;
         return true;
+
     }
 
     @Override
     public String toString() {
-        return "Book [id=" + id + ", categoryId=" + categoryId + ", title = " + title + ", photo = " + photo + ", isbn = " + isbn + ", publishDate=" + publishDate + "]";
+        return "Book [id=" + id + ", category=" + category + ", title=" +
+
+                title + ", photo=" + photo + ", isbn=" + isbn
+
+                + ", publishDate=" + publishDate + "]";
 
     }
+
 }

@@ -1,9 +1,5 @@
 package bibloteka.ui;
 
-import bibloteka.dao.AuthorDao;
-import bibloteka.domain.Author;
-import bibloteka.ui.utill.UIHelper;
-
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -23,6 +19,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import bibloteka.dao.AuthorDao;
+import bibloteka.domain.Author;
+import bibloteka.ui.utill.UIHelper;
+
 
 public class AuthorNewEditFrame extends JInternalFrame {
 
@@ -40,12 +40,11 @@ public class AuthorNewEditFrame extends JInternalFrame {
         this.dao = dao;
         getContentPane().setLayout(new BorderLayout(0, 0));
 
-        JPanel pnlHeader = new JPanel(new FlowLayout(FlowLayout.LEFT,
+        JPanel pnlHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 10,
 
-                10, 10));
+                10));
 
         pnlHeader.setBackground(SystemColor.activeCaption);
-
         getContentPane().add(pnlHeader, BorderLayout.NORTH);
 
         JLabel lblTitle = new JLabel("Title");
@@ -167,13 +166,10 @@ public class AuthorNewEditFrame extends JInternalFrame {
                 if (authorValid()) {
                     updateAuthor();
                     try {
-
                         dao.save(author);
                         setClosed(true);
-
                     } catch (Exception ex) {
                         ex.printStackTrace();
-
                     }
                 } else {
 
@@ -191,7 +187,7 @@ public class AuthorNewEditFrame extends JInternalFrame {
     }
 
     public void fillFields() {
-        if (author != null && author.getId() != 0) {
+        if (authorValid()) {
             txtID.setText("" + author.getId());
             txtName.setText(author.getName());
             txtLastname.setText(author.getLastName());
@@ -205,8 +201,8 @@ public class AuthorNewEditFrame extends JInternalFrame {
             author.setName(txtName.getText());
             author.setLastName(txtLastname.getText());
             author.setCountry(txtCountry.getText());
-        }
 
+        }
     }
 
     public Author getAuthor() {

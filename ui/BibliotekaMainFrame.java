@@ -1,11 +1,24 @@
 package bibloteka.ui;
 
-
 import bibloteka.ui.utill.UIHelper;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+
 
 
 public class BibliotekaMainFrame extends JFrame {
@@ -31,6 +44,7 @@ public class BibliotekaMainFrame extends JFrame {
         menuItem.setAccelerator(keyStrokeToRegister);
 
         menuFile.add(menuItem);
+
         menuItem = new JMenuItem();
         menuItem.setAction(new AuthorsAction("Autoret"));
         menuFile.add(menuItem);
@@ -47,7 +61,6 @@ public class BibliotekaMainFrame extends JFrame {
         menuItem = new JMenuItem();
         menuItem.setAction(new AboutAction("Per ne"));
         menuAbout.add(menuItem);
-
         menuBar.add(menuAbout);
 
         setJMenuBar(menuBar);
@@ -68,19 +81,21 @@ public class BibliotekaMainFrame extends JFrame {
 
     private class AuthorsAction extends AbstractAction {
         public AuthorsAction(String title) {
-            super(title, UIHelper.addIcon);
+            super(title, UIHelper.authorsIcon);
 
         }
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
-            AuthorsInternalFrame rFrame = new AuthorsInternalFrame("Menaxhimi i autoreve");
-            desktop.add(rFrame);
+
             try {
+                AuthorsInternalFrame rFrame = new AuthorsInternalFrame("Menaxhimi i autoreve");
+                desktop.add(rFrame);
                 rFrame.setSelected(true);
                 rFrame.setVisible(true);
 
-            } catch (java.beans.PropertyVetoException ex) {
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
 
         }
@@ -89,36 +104,39 @@ public class BibliotekaMainFrame extends JFrame {
 
     private class BookAction extends AbstractAction {
         public BookAction(String title) {
-            super(title, UIHelper.notesIcon);
+            super(title, UIHelper.booksIcon);
 
         }
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
-            BookInternalFrame rFrame = new BookInternalFrame("Menagjimi i librave");
-            desktop.add(rFrame);
+
             try {
+                BookInternalFrame rFrame = new BookInternalFrame("Menagjimi i librave");
+                desktop.add(rFrame);
                 rFrame.setSelected(true);
-            } catch (java.beans.PropertyVetoException e) {
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
 
     private class CategoriesAction extends AbstractAction {
         public CategoriesAction(String title) {
-            super(title, UIHelper.repairIcon); // Icon!!
-
+            super(title, UIHelper.repairIcon);
         }
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
-            CategoryInternalFrame rFrame = new CategoryInternalFrame("Menaxhimi i kategorive");
-            desktop.add(rFrame);
+
             try {
+                CategoryInternalFrame rFrame = new CategoryInternalFrame("Menaxhimi i kategorive");
+                desktop.add(rFrame);
                 rFrame.setSelected(true);
                 rFrame.setVisible(true);
 
-            } catch (java.beans.PropertyVetoException ex) {
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
 
         }
@@ -154,6 +172,7 @@ public class BibliotekaMainFrame extends JFrame {
 
     public void createToolBar() {
         toolbar = new JToolBar();
+
         btnRegister = new JButton();
         btnRegister.setAction(new BookAction(""));
         btnRegister.setToolTipText("Regjistro liber te ri");

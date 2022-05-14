@@ -6,15 +6,32 @@ import bibloteka.ui.utill.AppProperties;
 import bibloteka.ui.utill.UIHelper;
 import bibloteka.ui.validation.TextNonEmptyValidation;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.FocusTraversalPolicy;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 
 public class LoginFrame extends JFrame implements ActionListener {
+
     private static final long serialVersionUID = 1L;
 
     private JLabel lblUsername;
@@ -28,7 +45,6 @@ public class LoginFrame extends JFrame implements ActionListener {
     private JButton btnLogin;
     private JButton btnCancel;
     private JButton btnSettings;
-    private UserDao dao;
 
     private TextNonEmptyValidation textNonEmptyValidation;
 
@@ -42,10 +58,10 @@ public class LoginFrame extends JFrame implements ActionListener {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+
     }
 
     private JPanel doComponentLayout() {
-
         JPanel content = new JPanel(new GridLayout(4, 1));
         content.setBorder(new EmptyBorder(3, 3, 3, 3));
 
@@ -57,6 +73,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         JPanel topPanel = new JPanel(new GridLayout(2, 2));
         lblUsername = new JLabel("Shfrytezuesi:");
         lblPassword = new JLabel("Fjalekalimi:");
+
         txtUsername = new JTextField(10);
         txtUsername.setName("Shfrytezuesi");
         textNonEmptyValidation = new TextNonEmptyValidation();
@@ -65,7 +82,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         txtPassword = new JPasswordField(10);
         txtPassword.setName("Fjalekalimi");
-        txtPassword.setName(String.valueOf(textNonEmptyValidation));
+        txtPassword.setInputVerifier(textNonEmptyValidation);
         txtPassword.setText(AppProperties.password);
 
         chkSaveDetails = new JCheckBox("Ruaj shenimet");
@@ -108,14 +125,19 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         if (btnCancel == ae.getSource()) System.exit(0);
         else if (txtUsername == ae.getSource()) {
-
             txtPassword.requestFocus();
         } else if (txtPassword == ae.getSource()) {
 
             btnLogin.requestFocus();
         } else if (btnLogin == ae.getSource()) {
 
-            new LoginTask().execute();
+            try {
+                new LoginTask().execute();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+            }
         }
 
     }
@@ -124,12 +146,13 @@ public class LoginFrame extends JFrame implements ActionListener {
         private User user;
         private UserDao dao;
 
-        public LoginTask() {
+        public LoginTask() throws SQLException {
             dao = new UserDao();
         }
 
         @Override
-        protected Void doInBackground() throws Exception { // login logic
+        protected Void doInBackground() throws Exception {
+            // login logic
             try {
                 user = dao.login(txtUsername.getText(), txtPassword.getText());
             } catch (Exception e) {
@@ -140,6 +163,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         @Override
         protected void done() {
+
             if (user != null) {
                 if (chkSaveDetails.isSelected()) {
                     AppProperties.username = txtUsername.getText();
@@ -165,14 +189,21 @@ public class LoginFrame extends JFrame implements ActionListener {
             else if (aComponent == txtPassword) return btnLogin;
             else if (aComponent == btnLogin) return btnCancel;
             else if (aComponent == btnCancel) return txtUsername;
-            else return txtUsername;
+            else
+
+                return txtUsername;
 
         }
 
         @Override
-        public Component getComponentBefore(Container aContainer, Component aComponent) {
+        public Component getComponentBefore(Container aContainer, Component
+
+                aComponent) {
+
             if (aComponent == txtUsername) return btnCancel;
-            else if (aComponent == txtPassword) return txtUsername;
+            else if (aComponent == txtPassword)
+
+                return txtUsername;
             else if (aComponent == btnLogin)
 
                 return txtPassword;
@@ -202,7 +233,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
     }
 
-    public void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -211,4 +242,5 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         });
     }
+
 }

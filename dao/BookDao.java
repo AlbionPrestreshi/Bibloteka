@@ -2,34 +2,13 @@ package bibloteka.dao;
 
 import bibloteka.domain.Book;
 
-import java.util.List;
-
-public class BookDao implements Dao<Book> {
+import java.sql.SQLException;
 
 
-    @Override
-    public Book get(long id) throws Exception {
-        throw new Exception("Nuk eshte implementuar ende!");
+
+public class BookDao extends BibliotekaAbstractDao<Book> {
+
+    public BookDao(Class<Book> cls) throws SQLException {
+        super(Book.class);
     }
-
-    @Override
-    public List<Book> getAll() throws Exception {
-        throw new Exception("Nuk eshte implementuar ende!");
-    }
-
-    @Override
-    public int save(Book record) throws Exception {
-        throw new Exception("Nuk eshte implementuar ende!");
-    }
-
-    @Override
-    public int update(Book record) throws Exception {
-        throw new Exception("Nuk eshte implementuar ende!");
-    }
-
-    @Override
-    public int delete(Book record) throws Exception {
-        throw new Exception("Nuk eshte implementuar ende!");
-    }
-
 }
