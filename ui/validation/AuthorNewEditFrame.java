@@ -1,4 +1,4 @@
-package bibloteka.ui;
+package bibloteka.ui.validation;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -23,7 +23,6 @@ import bibloteka.dao.AuthorDao;
 import bibloteka.domain.Author;
 import bibloteka.ui.utill.UIHelper;
 
-
 public class AuthorNewEditFrame extends JInternalFrame {
 
     private Author author;
@@ -34,17 +33,14 @@ public class AuthorNewEditFrame extends JInternalFrame {
     private JTextField txtCountry;
 
     public AuthorNewEditFrame(Author author, AuthorDao dao) {
-
         super("", true, true, true, true);
         this.author = author;
         this.dao = dao;
         getContentPane().setLayout(new BorderLayout(0, 0));
 
-        JPanel pnlHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 10,
-
-                10));
-
+        JPanel pnlHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         pnlHeader.setBackground(SystemColor.activeCaption);
+
         getContentPane().add(pnlHeader, BorderLayout.NORTH);
 
         JLabel lblTitle = new JLabel("Title");
@@ -141,19 +137,14 @@ public class AuthorNewEditFrame extends JInternalFrame {
 
         JButton btnCancel = new JButton("Cancel");
         btnCancel.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 try {
                     setClosed(true);
-
                 } catch (PropertyVetoException e1) {
                     e1.printStackTrace();
-
                 }
             }
-
         });
 
         panel.add(btnCancel);
@@ -163,36 +154,32 @@ public class AuthorNewEditFrame extends JInternalFrame {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
+                updateAuthor();
                 if (authorValid()) {
-                    updateAuthor();
                     try {
+
                         dao.save(author);
                         setClosed(true);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 } else {
-
                     UIHelper.error("Ploteso te dhenat!");
                 }
-
             }
-
         });
         panel.add(btnSave);
         fillFields();
         pack();
         setVisible(true);
-
     }
 
     public void fillFields() {
-        if (authorValid()) {
+        if (author != null && author.getId() != 0) {
             txtID.setText("" + author.getId());
             txtName.setText(author.getName());
             txtLastname.setText(author.getLastName());
             txtCountry.setText(author.getCountry());
-
         }
     }
 
@@ -201,7 +188,6 @@ public class AuthorNewEditFrame extends JInternalFrame {
             author.setName(txtName.getText());
             author.setLastName(txtLastname.getText());
             author.setCountry(txtCountry.getText());
-
         }
     }
 
@@ -211,6 +197,5 @@ public class AuthorNewEditFrame extends JInternalFrame {
 
     private boolean authorValid() {
         return Objects.nonNull(author) && Objects.nonNull(author.getName()) && Objects.nonNull(author.getLastName());
-
     }
 }

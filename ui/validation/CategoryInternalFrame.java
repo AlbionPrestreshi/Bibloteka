@@ -1,10 +1,11 @@
-package bibloteka.ui;
+package bibloteka.ui.validation;
 
 import bibloteka.dao.CategoryDao;
 import bibloteka.domain.Category;
+import bibloteka.ui.table.CustomizedTable;
 import bibloteka.ui.tablemodels.CategoryTableModel;
-import bibloteka.ui.tablemodels.CustomizedTable;
 import bibloteka.ui.utill.UIHelper;
+import bibloteka.ui.validation.BaseInternalFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -29,7 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
-
 
 public class CategoryInternalFrame extends BaseInternalFrame<Category> {
     private CategoryTableModel model;
@@ -58,11 +58,10 @@ public class CategoryInternalFrame extends BaseInternalFrame<Category> {
 
     @Override
     public void doCustomLayout() {
-
         JPanel pnlContent = new JPanel();
-        pnlContent.setLayout(new BorderLayout(5, 5));
 
         createConstraints();
+
         JPanel editPanel = createEditPanel();
         JPanel tablePanel = createTablePanel();
 
@@ -73,7 +72,6 @@ public class CategoryInternalFrame extends BaseInternalFrame<Category> {
         updateFooterMessage("Loading data...");
 
         getContentPane().add(pnlContent, BorderLayout.CENTER);
-
     }
 
     private void createConstraints() {
@@ -95,18 +93,13 @@ public class CategoryInternalFrame extends BaseInternalFrame<Category> {
 
         buttonConstraints = (GridBagConstraints) labelConstraints.clone();
         buttonConstraints.fill = GridBagConstraints.NONE;
-
     }
 
     public JPanel createTablePanel() {
-
         JPanel pnlTable = new JPanel();
         pnlTable.setBorder(BorderFactory.createTitledBorder("Lista e librave"));
-
         pnlTable.setLayout(new BorderLayout(5, 5));
-
         String[] columns = {"ID", "Name"};
-
         model = new CategoryTableModel(columns, elements);
         tblCategories = new CustomizedTable(model);
         tblCategories.addMouseListener(new RowClickListener());
@@ -115,13 +108,11 @@ public class CategoryInternalFrame extends BaseInternalFrame<Category> {
         pnlTable.add(scrPaneCategories, BorderLayout.CENTER);
 
         return pnlTable;
-
     }
 
     public JPanel createEditPanel() {
-
-// GridBagLayout huazuar nga
-// http://javatechniques.com/blog/gridbaglayout-example-a-simple-form-layout //
+        // GridBagLayout huazuar nga
+        // http://javatechniques.com/blog/gridbaglayout-example-a-simple-form-layout/
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Kategoria"));
@@ -158,7 +149,6 @@ public class CategoryInternalFrame extends BaseInternalFrame<Category> {
         addButton(btnSaveCategory, panel);
 
         return panel;
-
     }
 
     public void addField(Component c, Container panel) {
@@ -184,9 +174,7 @@ public class CategoryInternalFrame extends BaseInternalFrame<Category> {
 
         @Override
         protected Void doInBackground() throws Exception {
-
             list = baseDao.getAll();
-
             return null;
         }
 
@@ -194,13 +182,10 @@ public class CategoryInternalFrame extends BaseInternalFrame<Category> {
         protected void done() {
             model.setData(list);
             updateFooterMessage("Finished loading data.");
-
         }
-
     }
 
     private void fillEditPanel() {
-
         if (SELECTED_CATEGORY != null) {
             txtID.setText("" + SELECTED_CATEGORY.getId());
             txtName.setText(SELECTED_CATEGORY.getName());
@@ -208,7 +193,6 @@ public class CategoryInternalFrame extends BaseInternalFrame<Category> {
             txtID.setText("");
             txtName.setText("");
         }
-
     }
 
     private class NewAction extends AbstractAction {
@@ -219,36 +203,27 @@ public class CategoryInternalFrame extends BaseInternalFrame<Category> {
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
-
             SELECTED_CATEGORY = new Category();
-
             fillEditPanel();
         }
-
     }
 
     private class AbortEditAction extends AbstractAction {
         public AbortEditAction() {
             super(null, UIHelper.abortIcon);
-
         }
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
-
             tblCategories.clearSelection();
-
             SELECTED_CATEGORY = new Category();
-
             fillEditPanel();
         }
-
     }
 
     private class SaveAction extends AbstractAction {
         public SaveAction() {
             super(null, UIHelper.saveIcon);
-
         }
 
         @Override
@@ -257,46 +232,37 @@ public class CategoryInternalFrame extends BaseInternalFrame<Category> {
                 try {
                     int affected = -1;
                     SELECTED_CATEGORY.setName(txtName.getText());
-                    if (SELECTED_CATEGORY.isNew()) {
+                    if (SELECTED_CATEGORY.getId() == 0) {
                         affected = baseDao.save(SELECTED_CATEGORY);
-                    } else affected = baseDao.update(SELECTED_CATEGORY);
+                    } else
+                        affected = baseDao.update(SELECTED_CATEGORY);
                     if (affected > 0) {
                         model.remove(SELECTED_CATEGORY);
                         model.add(SELECTED_CATEGORY);
                     } else
-
-                        UIHelper.error("Te dhenat nuk jane ruajtur !");
-
+                        UIHelper.error("Te dhenat nuk jane ruajtur!");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
         }
 
         private boolean validate() {
             return true;
         }
-
     }
 
     private class DeleteAction extends AbstractAction {
         public DeleteAction() {
             super(null, UIHelper.deleteIcon);
-
         }
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
-
             int selectedRowIndex = tblCategories.getSelectedRow();
             if (selectedRowIndex != -1) {
-
                 SELECTED_CATEGORY = model.get(selectedRowIndex);
-
                 int result = UIHelper.confirm("A jeni te sigurt per veprimin");
-
                 if (result == JOptionPane.YES_OPTION) {
                     try {
                         int affected = baseDao.delete(SELECTED_CATEGORY);
@@ -310,24 +276,17 @@ public class CategoryInternalFrame extends BaseInternalFrame<Category> {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
-
             }
-
         }
-
     }
 
     public class RowClickListener implements MouseListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-
             int row = tblCategories.getSelectedRow();
-
             SELECTED_CATEGORY = model.get(row);
-
             fillEditPanel();
         }
 
@@ -348,5 +307,4 @@ public class CategoryInternalFrame extends BaseInternalFrame<Category> {
         }
 
     }
-
 }

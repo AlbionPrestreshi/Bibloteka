@@ -1,10 +1,8 @@
-package bibloteka.ui;
+package bibloteka.ui.validation;
 
 import bibloteka.ui.utill.UIHelper;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
@@ -18,7 +16,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
-
 
 
 public class BibliotekaMainFrame extends JFrame {
@@ -61,14 +58,15 @@ public class BibliotekaMainFrame extends JFrame {
         menuItem = new JMenuItem();
         menuItem.setAction(new AboutAction("Per ne"));
         menuAbout.add(menuItem);
+
         menuBar.add(menuAbout);
 
         setJMenuBar(menuBar);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(((int) d.getWidth()) / 2, ((int) d.getHeight()) / 2);
-
+        //Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        //setSize(((int) d.getWidth()) / 2, ((int) d.getHeight()) / 2);
+        setLocationRelativeTo(null);
         getContentPane().add(desktop);
 
         createToolBar();
@@ -76,13 +74,12 @@ public class BibliotekaMainFrame extends JFrame {
         getContentPane().add(toolbar, BorderLayout.NORTH);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
-
     }
 
     private class AuthorsAction extends AbstractAction {
+
         public AuthorsAction(String title) {
             super(title, UIHelper.authorsIcon);
-
         }
 
         @Override
@@ -95,17 +92,14 @@ public class BibliotekaMainFrame extends JFrame {
                 rFrame.setVisible(true);
 
             } catch (Exception ex) {
-                ex.printStackTrace();
             }
-
         }
-
     }
 
     private class BookAction extends AbstractAction {
-        public BookAction(String title) {
-            super(title, UIHelper.booksIcon);
 
+        public BookAction(String title) {
+            super(title, UIHelper.notesIcon);
         }
 
         @Override
@@ -116,12 +110,12 @@ public class BibliotekaMainFrame extends JFrame {
                 desktop.add(rFrame);
                 rFrame.setSelected(true);
             } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
 
     private class CategoriesAction extends AbstractAction {
+
         public CategoriesAction(String title) {
             super(title, UIHelper.repairIcon);
         }
@@ -136,17 +130,14 @@ public class BibliotekaMainFrame extends JFrame {
                 rFrame.setVisible(true);
 
             } catch (Exception ex) {
-                ex.printStackTrace();
             }
-
         }
-
     }
 
     private class ExitAction extends AbstractAction {
+
         public ExitAction(String title) {
             super(title, UIHelper.exitIcon);
-
         }
 
         @Override
@@ -158,16 +149,15 @@ public class BibliotekaMainFrame extends JFrame {
     }
 
     private class AboutAction extends AbstractAction {
+
         public AboutAction(String title) {
             super(title, UIHelper.aboutIcon);
-
         }
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
             UIHelper.info("TICK");
         }
-
     }
 
     public void createToolBar() {

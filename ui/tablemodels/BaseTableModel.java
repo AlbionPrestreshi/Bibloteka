@@ -6,7 +6,6 @@ import javax.swing.table.AbstractTableModel;
 public abstract class BaseTableModel<E> extends AbstractTableModel {
 
     protected String[] columns;
-
     protected List<E> elements;
 
     public BaseTableModel() {
@@ -24,17 +23,15 @@ public abstract class BaseTableModel<E> extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-
-        if (columns != null) return columns.length;
-
+        if (columns != null)
+            return columns.length;
         return 0;
     }
 
     @Override
     public int getRowCount() {
-
-        if (elements != null) return elements.size();
-
+        if (elements != null)
+            return elements.size();
         return 0;
     }
 
@@ -44,8 +41,8 @@ public abstract class BaseTableModel<E> extends AbstractTableModel {
     }
 
     public E get(int index) {
-        if (index >= 0) return elements.get(index);
-
+        if (index >= 0)
+            return elements.get(index);
         return null;
     }
 
@@ -58,5 +55,4 @@ public abstract class BaseTableModel<E> extends AbstractTableModel {
         elements.add(element);
         fireTableDataChanged();
     }
-
 }

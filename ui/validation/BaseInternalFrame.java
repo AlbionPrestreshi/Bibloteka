@@ -1,4 +1,4 @@
-package bibloteka.ui;
+package bibloteka.ui.validation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,9 +19,8 @@ import bibloteka.dao.BibliotekaAbstractDao;
 
 public abstract class BaseInternalFrame<T> extends JInternalFrame {
 
-    protected
+    protected BibliotekaAbstractDao<T> baseDao;
 
-    BibliotekaAbstractDao<T> baseDao;
     private JLabel lblFooterLabel = new JLabel(" ");
     protected Font titleFont = new Font("Arial", Font.BOLD, 20);
     protected Font normalFont = new Font("Arial", Font.BOLD, 18);
@@ -37,24 +36,19 @@ public abstract class BaseInternalFrame<T> extends JInternalFrame {
 
         pack();
         setVisible(true);
-
     }
 
     public void updateFooterMessage(String message) {
-
-        lblFooterLabel.setText(message); // largon tekstin e labeles pas 3 sekondave
+        lblFooterLabel.setText(message);
+        // largon tekstin e labeles pas 3 sekondave
         Timer t = new Timer(3000, new ActionListener() {
-
             @Override
-
             public void actionPerformed(ActionEvent e) {
                 lblFooterLabel.setText(" ");
-
             }
         });
         t.setRepeats(false);
         t.start();
-
     }
 
     public void doFooterLayout() {
@@ -66,7 +60,6 @@ public abstract class BaseInternalFrame<T> extends JInternalFrame {
     }
 
     public void doHeaderLayout(ImageIcon icon) {
-
         JPanel pnlHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnlHeader.setBackground(SystemColor.activeCaption);
 
@@ -78,9 +71,7 @@ public abstract class BaseInternalFrame<T> extends JInternalFrame {
         title.setFont(titleFont);
         pnlHeader.add(title);
         getContentPane().add(pnlHeader, BorderLayout.NORTH);
-
     }
 
     public abstract void doCustomLayout();
-
 }

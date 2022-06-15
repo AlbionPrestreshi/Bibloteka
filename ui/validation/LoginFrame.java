@@ -1,10 +1,9 @@
-package bibloteka.ui;
+package bibloteka.ui.validation;
 
 import bibloteka.dao.UserDao;
 import bibloteka.domain.User;
 import bibloteka.ui.utill.AppProperties;
 import bibloteka.ui.utill.UIHelper;
-import bibloteka.ui.validation.TextNonEmptyValidation;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -29,7 +28,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
-
 public class LoginFrame extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 1L;
@@ -49,7 +47,6 @@ public class LoginFrame extends JFrame implements ActionListener {
     private TextNonEmptyValidation textNonEmptyValidation;
 
     public LoginFrame() {
-
         setContentPane(doComponentLayout());
         getRootPane().setDefaultButton(btnLogin);
         setFocusTraversalPolicy(new ComponentOrderPolicy());
@@ -58,7 +55,6 @@ public class LoginFrame extends JFrame implements ActionListener {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-
     }
 
     private JPanel doComponentLayout() {
@@ -117,29 +113,24 @@ public class LoginFrame extends JFrame implements ActionListener {
         content.add(bottomPanel);
 
         return content;
-
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-
-        if (btnCancel == ae.getSource()) System.exit(0);
+        if (btnCancel == ae.getSource())
+            System.exit(0);
         else if (txtUsername == ae.getSource()) {
             txtPassword.requestFocus();
         } else if (txtPassword == ae.getSource()) {
-
             btnLogin.requestFocus();
         } else if (btnLogin == ae.getSource()) {
-
             try {
                 new LoginTask().execute();
-
             } catch (SQLException e) {
                 e.printStackTrace();
-
             }
-        }
 
+        }
     }
 
     private class LoginTask extends SwingWorker<Void, Void> {
@@ -163,7 +154,6 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         @Override
         protected void done() {
-
             if (user != null) {
                 if (chkSaveDetails.isSelected()) {
                     AppProperties.username = txtUsername.getText();
@@ -174,46 +164,39 @@ public class LoginFrame extends JFrame implements ActionListener {
                 new BibliotekaMainFrame();
                 dispose();
             } else {
-                UIHelper.error("Shfrytezuesi / Fjalekalimi jane gabim !");
-
+                UIHelper.error("Shfrytezuesi / Fjalekalimi jane gabim!");
             }
-
         }
-
     }
 
     private class ComponentOrderPolicy extends FocusTraversalPolicy {
+
         @Override
         public Component getComponentAfter(Container aContainer, Component aComponent) {
-            if (aComponent == txtUsername) return txtPassword;
-            else if (aComponent == txtPassword) return btnLogin;
-            else if (aComponent == btnLogin) return btnCancel;
-            else if (aComponent == btnCancel) return txtUsername;
-            else
-
+            if (aComponent == txtUsername)
+                return txtPassword;
+            else if (aComponent == txtPassword)
+                return btnLogin;
+            else if (aComponent == btnLogin)
+                return btnCancel;
+            else if (aComponent == btnCancel)
                 return txtUsername;
-
+            else
+                return txtUsername;
         }
 
         @Override
-        public Component getComponentBefore(Container aContainer, Component
-
-                aComponent) {
-
-            if (aComponent == txtUsername) return btnCancel;
+        public Component getComponentBefore(Container aContainer, Component aComponent) {
+            if (aComponent == txtUsername)
+                return btnCancel;
             else if (aComponent == txtPassword)
-
                 return txtUsername;
             else if (aComponent == btnLogin)
-
                 return txtPassword;
             else if (aComponent == btnCancel)
-
                 return btnLogin;
             else
-
                 return txtUsername;
-
         }
 
         @Override
@@ -230,7 +213,6 @@ public class LoginFrame extends JFrame implements ActionListener {
         public Component getLastComponent(Container aContainer) {
             return btnCancel;
         }
-
     }
 
     public static void main(String[] args) throws IOException {
@@ -239,8 +221,6 @@ public class LoginFrame extends JFrame implements ActionListener {
             public void run() {
                 new LoginFrame();
             }
-
         });
     }
-
 }

@@ -1,9 +1,9 @@
-package bibloteka.ui;
+package bibloteka.ui.validation;
 
 import bibloteka.dao.AuthorDao;
 import bibloteka.domain.Author;
+import bibloteka.ui.table.CustomizedTable;
 import bibloteka.ui.tablemodels.AuthorTableModel;
-import bibloteka.ui.tablemodels.CustomizedTable;
 import bibloteka.ui.utill.UIHelper;
 
 import java.awt.BorderLayout;
@@ -28,7 +28,6 @@ import javax.swing.event.InternalFrameListener;
 
 
 public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements ActionListener {
-
     private JTextField txtSearch;
     private CustomizedTable table;
     private JButton btnNewAuthor;
@@ -39,7 +38,6 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
     private AuthorTableModel model;
 
     private List<Author> elements;
-
     private ArrayList<Author> filteredElements = new ArrayList<>();
 
     public AuthorsInternalFrame(String title) throws SQLException {
@@ -49,39 +47,33 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
 
     private void filter(String filterText) {
         for (Author author : elements) {
-            if (author.getName().toLowerCase().contains(filterText.toLowerCase()) || author.getLastName().toLowerCase().contains(filterText.toLowerCase())) {
-                if (!filteredElements.contains(author)) filteredElements.add(author);
+            if (author.getName().toLowerCase().contains(filterText.toLowerCase())
+                    || author.getLastName().toLowerCase().contains(filterText.toLowerCase())) {
+                if (!filteredElements.contains(author))
+                    filteredElements.add(author);
             } else {
-                if (filteredElements.contains(author)) filteredElements.remove(author);
+                if (filteredElements.contains(author))
+                    filteredElements.remove(author);
             }
         }
-
     }
 
     private class GetAuthors extends SwingWorker<Void, Void> {
-
         @Override
         protected Void doInBackground() throws Exception {
-
             try {
                 elements = baseDao.getAll();
-
             } catch (Exception e) {
                 UIHelper.error("Problem me bazen e shenimeve!");
-
             }
-
             return null;
         }
 
         @Override
         protected void done() {
-
             model.setData(elements);
-
             updateFooterMessage("Finished loading data.");
         }
-
     }
 
     @Override
@@ -120,14 +112,11 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-
                 }
-
             }
         } else if (evt.getSource() == btnSearch) {
 
         }
-
     }
 
     class AuthorFrameListener implements InternalFrameListener {
@@ -145,8 +134,8 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
         public void internalFrameClosing(InternalFrameEvent evt) {
             AuthorNewEditFrame frm = (AuthorNewEditFrame) evt.getInternalFrame();
             Author author = frm.getAuthor();
-            if (author != null && author.getId() != 0) model.add(author);
-
+            if (author != null && author.getId() != 0)
+                model.add(author);
         }
 
         @Override
@@ -164,12 +153,10 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
         @Override
         public void internalFrameOpened(InternalFrameEvent arg0) {
         }
-
     }
 
     @Override
     public void doCustomLayout() {
-
         JPanel pnlContent = new JPanel();
         getContentPane().add(pnlContent, BorderLayout.CENTER);
         pnlContent.setLayout(new BorderLayout(0, 0));
@@ -202,23 +189,20 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
-            public void removeUpdate(DocumentEvent e) { // kur fshihet nje shkronje
-
+            public void removeUpdate(DocumentEvent e) {
+                // kur fshihet nje shkronje
                 String filterText = txtSearch.getText();
                 if (filterText.equals("")) {
-
                     model.setData(elements);
                 } else {
-
                     filter(filterText);
-
                     model.setData(filteredElements);
                 }
-
             }
 
             @Override
-            public void insertUpdate(DocumentEvent e) { // kur shtohet nje shkronje
+            public void insertUpdate(DocumentEvent e) {
+                // kur shtohet nje shkronje
                 String filterText = txtSearch.getText();
                 filter(filterText);
                 model.setData(filteredElements);
@@ -228,7 +212,6 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
             public void changedUpdate(DocumentEvent e) {
 
             }
-
         });
         pnlRightButtons.add(txtSearch);
 
@@ -239,7 +222,7 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
         JPanel pnlTable = new JPanel();
         pnlTable.setLayout(new BorderLayout(0, 0));
 
-        String[] columns = {"ID", "Emri", "Mbiemri", "Shteti"};
+        String[] columns = { "ID", "Emri", "Mbiemri", "Shteti" };
         model = new AuthorTableModel(columns, elements);
 
         table = new CustomizedTable(model);
@@ -252,7 +235,5 @@ public class AuthorsInternalFrame extends BaseInternalFrame<Author> implements A
         getContentPane().add(pnlContent, BorderLayout.CENTER);
 
         updateFooterMessage("Loading data...");
-
     }
-
 }

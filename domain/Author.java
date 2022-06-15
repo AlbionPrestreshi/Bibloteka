@@ -5,13 +5,10 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "authors")
 public class Author extends BaseEntity {
-
     @DatabaseField
     private String name;
-
     @DatabaseField
     private String lastName;
-
     @DatabaseField
     private String country;
 
@@ -49,28 +46,20 @@ public class Author extends BaseEntity {
 
     @Override
     public boolean equals(Object obj) {
-
-        if (this == obj) return true;
+        if (this == obj)
+            return true;
         if (obj == null)
-
             return false;
         if (getClass() != obj.getClass())
-
             return false;
         Author other = (Author) obj;
         if (id != other.id)
-
             return false;
         return true;
-
     }
 
     @Override
     public String toString() {
-        return "Author [id=" + id + ", name=" + name + ", lastName=" +
-
-                lastName + ", country=" + country + "]";
-
+        return "Author [id=" + id + ", name=" + name + ", lastName=" + lastName + ", country=" + country + "]";
     }
-
 }

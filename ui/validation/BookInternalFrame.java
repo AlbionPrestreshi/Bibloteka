@@ -1,12 +1,13 @@
-package bibloteka.ui;
+package bibloteka.ui.validation;
 
 import bibloteka.dao.BookDao;
 import bibloteka.dao.CategoryDao;
 import bibloteka.domain.Book;
 import bibloteka.domain.Category;
+import bibloteka.ui.table.CustomizedTable;
 import bibloteka.ui.tablemodels.BookTableModel;
-import bibloteka.ui.tablemodels.CustomizedTable;
 import bibloteka.ui.utill.UIHelper;
+import bibloteka.ui.validation.BaseInternalFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -15,11 +16,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.*;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-
 
 
 public class BookInternalFrame extends BaseInternalFrame<Book> {
@@ -45,14 +46,13 @@ public class BookInternalFrame extends BaseInternalFrame<Book> {
     private GridBagConstraints fieldConstraints;
     private GridBagConstraints buttonConstraints;
 
-    public BookInternalFrame(String title) {
-        super(title, UIHelper.notesIcon, new BookDao());
+    public BookInternalFrame(String title) throws SQLException {
+        super(title, UIHelper.notesIcon, new BookDao(Book.class));
         new GetBooksTask().execute();
     }
 
     @Override
     public void doCustomLayout() {
-
         JPanel pnlContent = new JPanel();
         pnlContent.setLayout(new BorderLayout(5, 5));
 
@@ -68,7 +68,6 @@ public class BookInternalFrame extends BaseInternalFrame<Book> {
         updateFooterMessage("Loading data...");
 
         getContentPane().add(pnlContent, BorderLayout.CENTER);
-
     }
 
     private void createConstraints() {
@@ -93,11 +92,10 @@ public class BookInternalFrame extends BaseInternalFrame<Book> {
     }
 
     public JPanel createTablePanel() {
-
         JPanel pnlTable = new JPanel();
         pnlTable.setBorder(BorderFactory.createTitledBorder("Lista e librave"));
-
-                pnlTable.setLayout(new BorderLayout(5, 5)); String[] columns = {"ID", "Title", "ISBN", "Publish Date"};
+        pnlTable.setLayout(new BorderLayout(5, 5));
+        String[] columns = {"ID", "Title", "ISBN", "Publish Date"};
         model = new BookTableModel(columns, elements);
         tblBooks = new CustomizedTable(model);
         tblBooks.addMouseListener(new RowClickListener());
@@ -106,10 +104,11 @@ public class BookInternalFrame extends BaseInternalFrame<Book> {
         pnlTable.add(scrPaneBooks, BorderLayout.CENTER);
 
         return pnlTable;
-
     }
 
-    public JPanel createEditPanel() { // GridBagLayout huazuar nga // http://javatechniques.com/blog/gridbaglayout-example-asimple-form-layout/
+    public JPanel createEditPanel() {
+        // GridBagLayout huazuar nga
+        // http://javatechniques.com/blog/gridbaglayout-example-a-simple-form-layout/
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Libri"));
@@ -124,17 +123,13 @@ public class BookInternalFrame extends BaseInternalFrame<Book> {
 
         cboCategories = new JComboBox<Category>();
 
-        ArrayList<Category> categories;
+        List<Category> categories;
         try {
-
-            categories = new CategoryDao().getAll();
-
+            categories = new CategoryDao(Category.class).getAll();
             for (Category category : categories) {
                 cboCategories.addItem(category);
-
             }
         } catch (Exception e) {
-
             e.printStackTrace();
         }
         addField(cboCategories, panel);
@@ -175,7 +170,6 @@ public class BookInternalFrame extends BaseInternalFrame<Book> {
         addButton(btnSaveBook, panel);
 
         return panel;
-
     }
 
     public void addField(Component c, Container panel) {
@@ -201,20 +195,15 @@ public class BookInternalFrame extends BaseInternalFrame<Book> {
 
         @Override
         protected Void doInBackground() throws Exception {
-
             list = baseDao.getAll();
-
             return null;
         }
 
         @Override
         protected void done() {
-
             model.setData(list);
-
             updateFooterMessage("Finished.");
         }
-
     }
 
     private void fillEditPanel() {
@@ -228,52 +217,42 @@ public class BookInternalFrame extends BaseInternalFrame<Book> {
             txtPublishDate.setText("");
         }
         try {
-            Category category = new CategoryDao().get(SELECTED_BOOK.getCategoryId());
+            Category category = SELECTED_BOOK.getCategory();
             cboCategories.setSelectedItem(category);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private class NewAction extends AbstractAction {
+
         private NewAction() {
             super(null, UIHelper.newIcon);
-
         }
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
-
             SELECTED_BOOK = new Book();
-
             fillEditPanel();
         }
-
     }
 
     private class AbortEditAction extends AbstractAction {
         public AbortEditAction() {
             super(null, UIHelper.abortIcon);
-
         }
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
-
             tblBooks.clearSelection();
-
             SELECTED_BOOK = new Book();
-
             fillEditPanel();
         }
-
     }
 
     private class SaveAction extends AbstractAction {
         public SaveAction() {
             super(null, UIHelper.saveIcon);
-
         }
 
         @Override
@@ -281,70 +260,57 @@ public class BookInternalFrame extends BaseInternalFrame<Book> {
             if (validate()) {
                 SELECTED_BOOK.setTitle(txtTitle.getText());
                 Category c = (Category) cboCategories.getSelectedItem();
-                SELECTED_BOOK.setCategoryId(c.getId());
+                SELECTED_BOOK.setCategory(c);
                 SELECTED_BOOK.setIsbn(txtISBN.getText());
                 SELECTED_BOOK.setPublishDate(new java.util.Date());
                 try {
                     int affected = -1;
-                    if (SELECTED_BOOK.getId() == 0) affected = baseDao.save(SELECTED_BOOK);
-                    else affected = baseDao.update(SELECTED_BOOK);
-                    if (affected > 0) model.add(SELECTED_BOOK);
-                    else UIHelper.error("Te dhenat nuk jane ruajtur!");
+                    if (SELECTED_BOOK.getId() == 0)
+                        affected = baseDao.save(SELECTED_BOOK);
+                    else
+                        affected = baseDao.update(SELECTED_BOOK);
+                    if (affected > 0)
+                        model.add(SELECTED_BOOK);
+                    else
+                        UIHelper.error("Te dhenat nuk jane ruajtur!");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
         }
 
         private boolean validate() {
             return true;
         }
-
     }
 
     private class DeleteAction extends AbstractAction {
         public DeleteAction() {
             super(null, UIHelper.deleteIcon);
-
         }
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
             int selectedRowIndex = tblBooks.getSelectedRow();
             if (selectedRowIndex != -1) {
-
                 SELECTED_BOOK = model.get(selectedRowIndex);
-                int result = UIHelper.confirm("A jeni te sigurt per veprimin ? ");
-
+                int result = UIHelper.confirm("A jeni te sigurt per veprimin?");
                 if (result == JOptionPane.YES_OPTION) {
                     try {
                         int affected = baseDao.delete(SELECTED_BOOK);
                         if (affected > 0) {
-
                             model.remove(SELECTED_BOOK);
-
-                            SELECTED_BOOK = new
-
-                                    Book();
-
+                            SELECTED_BOOK = new Book();
                             fillEditPanel();
                         } else {
-                            UIHelper.error("Rekordi nuk eshte fshire !!");
-
+                            UIHelper.error("Rekordi nuk eshte fshire!!");
                         }
                     } catch (Exception e) {
-
                         e.printStackTrace();
                     }
-
                 }
-
             }
-
         }
-
     }
 
     public class RowClickListener implements MouseListener {
@@ -353,7 +319,6 @@ public class BookInternalFrame extends BaseInternalFrame<Book> {
             int row = tblBooks.getSelectedRow();
             SELECTED_BOOK = model.get(row);
             fillEditPanel();
-
         }
 
         @Override
@@ -371,7 +336,5 @@ public class BookInternalFrame extends BaseInternalFrame<Book> {
         @Override
         public void mouseReleased(MouseEvent e) {
         }
-
     }
-
 }
