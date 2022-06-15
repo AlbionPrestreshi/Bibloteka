@@ -10,17 +10,19 @@ public class UserDao extends BibliotekaAbstractDao<User> {
 
     public UserDao() throws SQLException {
         super(User.class);
-
     }
 
     public User login(String username, String password) throws Exception {
-        User user = null; .
-        query(dao.queryBuilder().where().eq("username",
-                username).and().eq("password", password).prepare());
-        if (users.size() > 0) user = users.get(0);
+        User user = null;
+        List<User> users = dao
+                .query(dao.queryBuilder()
+                        .where()
+                        .eq("username", username)
+                        .and()
+                        .eq("password", password)
+                        .prepare());
+        if (users.size() > 0)
+            user = users.get(0);
         return user;
-
-        List<User> users = dao;
-
     }
 }
