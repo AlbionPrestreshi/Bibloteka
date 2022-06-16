@@ -1,9 +1,10 @@
-package bibloteka.ui.validation;
+package bibloteka.ui;
 
 import bibloteka.dao.UserDao;
 import bibloteka.domain.User;
 import bibloteka.ui.utill.AppProperties;
 import bibloteka.ui.utill.UIHelper;
+import bibloteka.ui.validation.TextNonEmptyValidation;
 
 import java.awt.Component;
 import java.awt.Container;

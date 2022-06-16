@@ -1,4 +1,4 @@
-package bibloteka.ui.validation;
+package bibloteka.ui;
 
 import bibloteka.ui.utill.UIHelper;
 

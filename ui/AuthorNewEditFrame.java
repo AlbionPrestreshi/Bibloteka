@@ -1,4 +1,4 @@
-package bibloteka.ui.validation;
+package bibloteka.ui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

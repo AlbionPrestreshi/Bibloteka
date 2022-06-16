@@ -1,4 +1,4 @@
-package bibloteka.ui.validation;
+package bibloteka.ui;
 
 import bibloteka.dao.AuthorDao;
 import bibloteka.domain.Author;

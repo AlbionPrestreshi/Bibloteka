@@ -1,11 +1,10 @@
-package bibloteka.ui.validation;
+package bibloteka.ui;
 
 import bibloteka.dao.CategoryDao;
 import bibloteka.domain.Category;
 import bibloteka.ui.table.CustomizedTable;
 import bibloteka.ui.tablemodels.CategoryTableModel;
 import bibloteka.ui.utill.UIHelper;
-import bibloteka.ui.validation.BaseInternalFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
